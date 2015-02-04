@@ -188,6 +188,8 @@ public class AccentureTaskTimeManager {
         
         trayIcon.displayMessage("Sun TrayIcon Demo",
                 "O aplicativo está funcionando", TrayIcon.MessageType.INFO);
+        
+        //comentário teste
     }
     
     //Obtain the image URL
