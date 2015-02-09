@@ -111,6 +111,7 @@ public class AccentureTaskTimeManager {
         
 //        CheckboxMenuItem cb1 = new CheckboxMenuItem("Set auto size");
 //        CheckboxMenuItem cb2 = new CheckboxMenuItem("Set tooltip");
+        MenuItem tarefasItem = criarAdicionarItemAoMenu(popup, messages.getMessage(MessagesEnum.MENU_ITEM_INSERIR_TAREFAS));
         Menu tarefasMenu = criarAdicionarMenuAoMenu(popup, messages.getMessage(MessagesEnum.MENU_ITEM_TAREFAS));
         
         MenuItem errorItem = new MenuItem("Error");

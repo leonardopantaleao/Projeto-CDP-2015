@@ -12,6 +12,7 @@ public class MessagesENG extends Messages {
 		MENU_ITEM_IDIOMA = "Language";
 		MENU_ITEM_PORTUGUES = "Português";
 		MENU_ITEM_INGLES = "English";
+		MENU_ITEM_INSERIR_TAREFAS = "Insert Task...";
 	}
 
 }

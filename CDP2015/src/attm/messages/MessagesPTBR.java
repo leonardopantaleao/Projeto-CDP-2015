@@ -12,6 +12,7 @@ public class MessagesPTBR extends Messages {
 		MENU_ITEM_IDIOMA = "Idioma";
 		MENU_ITEM_PORTUGUES = "Português";
 		MENU_ITEM_INGLES = "English";
+		MENU_ITEM_INSERIR_TAREFAS = "Inserir Tarefa...";
 	}
 
 }

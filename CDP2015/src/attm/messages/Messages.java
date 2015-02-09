@@ -10,6 +10,7 @@ public abstract class Messages {
 	String MENU_ITEM_IDIOMA;
 	String MENU_ITEM_PORTUGUES;
 	String MENU_ITEM_INGLES;
+	String MENU_ITEM_INSERIR_TAREFAS;
 	
 	
 	public String getMessage(MessagesEnum msg) {
@@ -32,6 +33,8 @@ public abstract class Messages {
 			return this.MENU_ITEM_PORTUGUES;
 		case MENU_ITEM_INGLES:
 			return this.MENU_ITEM_INGLES;
+		case MENU_ITEM_INSERIR_TAREFAS:
+			return this.MENU_ITEM_INSERIR_TAREFAS;
 		default:
 			return null;
 		}
