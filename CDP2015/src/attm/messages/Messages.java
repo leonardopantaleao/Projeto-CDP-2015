@@ -11,6 +11,9 @@ public abstract class Messages {
 	String MENU_ITEM_PORTUGUES;
 	String MENU_ITEM_INGLES;
 	String MENU_ITEM_INSERIR_TAREFAS;
+	String JANELA_INSERIR_TAREFAS_TITULO;
+	String JANELA_INSERIR_TAREFAS_INSERIR_TEXTO;
+	String CANCELAR;
 	
 	
 	public String getMessage(MessagesEnum msg) {
@@ -35,6 +38,12 @@ public abstract class Messages {
 			return this.MENU_ITEM_INGLES;
 		case MENU_ITEM_INSERIR_TAREFAS:
 			return this.MENU_ITEM_INSERIR_TAREFAS;
+		case JANELA_INSERIR_TAREFAS_TITULO:
+			return this.JANELA_INSERIR_TAREFAS_TITULO;
+		case JANELA_INSERIR_TAREFAS_INSERIR_TEXTO:
+			return this.JANELA_INSERIR_TAREFAS_INSERIR_TEXTO;
+		case CANCELAR:
+			return this.CANCELAR;
 		default:
 			return null;
 		}

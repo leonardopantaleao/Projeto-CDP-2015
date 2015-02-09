@@ -13,6 +13,9 @@ public class MessagesPTBR extends Messages {
 		MENU_ITEM_PORTUGUES = "Português";
 		MENU_ITEM_INGLES = "English";
 		MENU_ITEM_INSERIR_TAREFAS = "Inserir Tarefa...";
+		JANELA_INSERIR_TAREFAS_TITULO = "Inserir tarefa";
+		JANELA_INSERIR_TAREFAS_INSERIR_TEXTO = "Insira o nome da tarefa: ";
+		CANCELAR = "Cancelar";
 	}
 
 }

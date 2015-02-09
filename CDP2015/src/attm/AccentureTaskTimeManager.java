@@ -64,7 +64,6 @@ public class AccentureTaskTimeManager {
 	private static SystemTray tray;
 	private static boolean exibeMensagemAbertura = true;
 	private static PopupMenu popup;
-	private static Preferences preferences;
 	
     public static void main(String[] args) {
         /* Use an appropriate Look and Feel */
@@ -81,7 +80,6 @@ public class AccentureTaskTimeManager {
             ex.printStackTrace();
         }
         
-        preferences = Preferences.userRoot().node(getUserDataDirectory());
         
         messages = FactoryMessages.getInstance("Português-BR"); 
         
@@ -97,6 +95,8 @@ public class AccentureTaskTimeManager {
     }
     
     private static void createAndShowGUI() {
+    	UIManager.put("OptionPane.cancelButtonText", messages.getMessage(MessagesEnum.CANCELAR));
+    	
         //Check the SystemTray support
         if (!SystemTray.isSupported()) {
             System.out.println("SystemTray is not supported");
@@ -108,11 +108,11 @@ public class AccentureTaskTimeManager {
         trayIcon.setImageAutoSize(true);
         tray = SystemTray.getSystemTray();
         
-        
 //        CheckboxMenuItem cb1 = new CheckboxMenuItem("Set auto size");
 //        CheckboxMenuItem cb2 = new CheckboxMenuItem("Set tooltip");
         MenuItem tarefasItem = criarAdicionarItemAoMenu(popup, messages.getMessage(MessagesEnum.MENU_ITEM_INSERIR_TAREFAS));
         Menu tarefasMenu = criarAdicionarMenuAoMenu(popup, messages.getMessage(MessagesEnum.MENU_ITEM_TAREFAS));
+        tarefasMenu.setEnabled(false);
         
         MenuItem errorItem = new MenuItem("Error");
         MenuItem warningItem = new MenuItem("Warning");
@@ -247,6 +247,15 @@ public class AccentureTaskTimeManager {
 //				}
 			}
 		});
+        
+        tarefasItem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+		        Object nomeTarefa = JOptionPane.showInputDialog(null, messages.getMessage(MessagesEnum.JANELA_INSERIR_TAREFAS_INSERIR_TEXTO), messages.getMessage(MessagesEnum.JANELA_INSERIR_TAREFAS_TITULO), JOptionPane.PLAIN_MESSAGE, null, null, null);
+		        System.out.println(nomeTarefa != null ? nomeTarefa.toString(): "");
+			}
+		});
     }
     
     //Obtain the image URL
@@ -288,7 +297,6 @@ public class AccentureTaskTimeManager {
     
     private static void selecionaLingua(String lingua){
     	messages = FactoryMessages.getInstance(lingua);
-		preferences.put("linguaEscolhida", lingua);
     }
     
     public static String getUserDataDirectory() {
