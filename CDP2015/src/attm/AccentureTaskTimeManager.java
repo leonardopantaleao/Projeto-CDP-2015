@@ -45,7 +45,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.net.URL;
-import java.util.prefs.Preferences;
+import java.util.HashMap;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -53,6 +53,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import attm.data.AppSingleton;
+import attm.data.ConfigFile;
 import attm.messages.FactoryMessages;
 import attm.messages.Messages;
 import attm.messages.MessagesEnum;
@@ -64,6 +66,10 @@ public class AccentureTaskTimeManager {
 	private static SystemTray tray;
 	private static boolean exibeMensagemAbertura = true;
 	private static PopupMenu popup;
+	
+	private static HashMap<String, Object> dados;
+	private static ConfigFile arquivo;
+	private static AppSingleton singleton;
 	
     public static void main(String[] args) {
         /* Use an appropriate Look and Feel */
@@ -82,6 +88,12 @@ public class AccentureTaskTimeManager {
         
         
         messages = FactoryMessages.getInstance("Português-BR"); 
+        
+        singleton = AppSingleton.getInstance();
+        arquivo = singleton.getFile();
+        dados = singleton.getConfig();
+        
+        System.out.println(dados.get("Tarefa"));
         
         /* Turn off metal's use of bold fonts */
         UIManager.put("swing.boldMetal", Boolean.FALSE);
@@ -253,7 +265,10 @@ public class AccentureTaskTimeManager {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 		        Object nomeTarefa = JOptionPane.showInputDialog(null, messages.getMessage(MessagesEnum.JANELA_INSERIR_TAREFAS_INSERIR_TEXTO), messages.getMessage(MessagesEnum.JANELA_INSERIR_TAREFAS_TITULO), JOptionPane.PLAIN_MESSAGE, null, null, null);
-		        System.out.println(nomeTarefa != null ? nomeTarefa.toString(): "");
+		        final String caixaNomeTarefaText = nomeTarefa != null ? nomeTarefa.toString(): "";
+				System.out.println(caixaNomeTarefaText);
+		        dados.put("Tarefa", caixaNomeTarefaText);
+		        arquivo.gravarObjetoNoArquivo(dados);
 			}
 		});
     }
