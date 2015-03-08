@@ -16,6 +16,10 @@ public class MessagesPTBR extends Messages {
 		JANELA_INSERIR_TAREFAS_TITULO = "Inserir tarefa";
 		JANELA_INSERIR_TAREFAS_INSERIR_TEXTO = "Insira o nome da tarefa: ";
 		CANCELAR = "Cancelar";
+		PAUSAR = "Pausar";
+		INICIAR = "Iniciar";
+		FECHAR = "Fechar";
+		LANCAR_HORAS = "Não esqueça de lançar suas horas na planilha!";
 	}
 
 }

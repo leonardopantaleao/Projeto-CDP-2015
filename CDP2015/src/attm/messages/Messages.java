@@ -14,6 +14,10 @@ public abstract class Messages {
 	String JANELA_INSERIR_TAREFAS_TITULO;
 	String JANELA_INSERIR_TAREFAS_INSERIR_TEXTO;
 	String CANCELAR;
+	String PAUSAR;
+	String INICIAR;
+	String FECHAR;
+	String LANCAR_HORAS;
 	
 	
 	public String getMessage(MessagesEnum msg) {
@@ -44,6 +48,14 @@ public abstract class Messages {
 			return this.JANELA_INSERIR_TAREFAS_INSERIR_TEXTO;
 		case CANCELAR:
 			return this.CANCELAR;
+		case PAUSAR:
+			return this.PAUSAR;
+		case INICIAR:
+			return this.INICIAR;
+		case FECHAR:
+			return this.FECHAR;
+		case LANCAR_HORAS:
+			return this.LANCAR_HORAS;
 		default:
 			return null;
 		}

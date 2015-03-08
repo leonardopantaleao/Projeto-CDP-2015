@@ -16,6 +16,10 @@ public class MessagesENG extends Messages {
 		JANELA_INSERIR_TAREFAS_TITULO = "Insert task";
 		JANELA_INSERIR_TAREFAS_INSERIR_TEXTO = "Insert the name of the task: ";
 		CANCELAR = "Cancel";
+		PAUSAR = "Pause";
+		INICIAR = "Start";
+		FECHAR = "Close";
+		LANCAR_HORAS = "Don't forget to update your Timesheet!";
 	}
 
 }
