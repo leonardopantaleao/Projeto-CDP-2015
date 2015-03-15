@@ -14,6 +14,7 @@ import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -25,13 +26,11 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import attm.data.AppSingleton;
 import attm.data.ConfigFile;
-import attm.messages.FactoryMessages;
-import attm.messages.Messages;
-import attm.messages.MessagesEnum;
+import attm.messages.MessagesFile;
 
 public class AccentureTaskTimeManager {
 	private static Timer timer;
-	private static Messages messages;
+	private static Properties messagesProperties;
 	private static TrayIcon trayIcon;
 	private static SystemTray tray;
 	private static boolean exibeMensagemAbertura = true;
@@ -71,9 +70,9 @@ public class AccentureTaskTimeManager {
 
 	private static void obterLinguaSalvaArquivo() {
 		try{
-			messages = FactoryMessages.getInstance((String)dados.get("Lingua"));
+			messagesProperties = MessagesFile.getLanguageFile((String)dados.get("Lingua"));
 		}catch(Exception e){
-			messages = FactoryMessages.getInstance("Português-BR"); 
+			messagesProperties = MessagesFile.getLanguageFile("Português-BR");
 		}
 	}
 
@@ -84,7 +83,7 @@ public class AccentureTaskTimeManager {
 	}
 
 	private static void criarExibirGUI() {
-		UIManager.put("OptionPane.cancelButtonText", messages.getMessage(MessagesEnum.CANCELAR));
+		UIManager.put("OptionPane.cancelButtonText", messagesProperties.getProperty("geral.cancelar"));
 
 		//Check the SystemTray support
 		if (!SystemTray.isSupported()) {
@@ -99,8 +98,9 @@ public class AccentureTaskTimeManager {
 
 		//        CheckboxMenuItem cb1 = new CheckboxMenuItem("Set auto size");
 		//        CheckboxMenuItem cb2 = new CheckboxMenuItem("Set tooltip");
-		MenuItem tarefasItem = criarAdicionarItemAoMenu(popup, messages.getMessage(MessagesEnum.MENU_ITEM_INSERIR_TAREFAS));
-		Menu tarefasMenu = criarAdicionarMenuAoMenu(popup, messages.getMessage(MessagesEnum.MENU_ITEM_TAREFAS));
+//		MenuItem tarefasItem = criarAdicionarItemAoMenu(popup, messagesProperties.getProperty(MENU.ITEM.INSERIR.TAREFAS));
+		MenuItem tarefasItem = criarAdicionarItemAoMenu(popup, messagesProperties.getProperty("menu.item.inserir.tarefas"));
+		Menu tarefasMenu = criarAdicionarMenuAoMenu(popup, messagesProperties.getProperty("menu.item.tarefas"));
 		tarefasMenu.setEnabled(false);
 
 		MenuItem errorItem = new MenuItem("Error");
@@ -113,12 +113,12 @@ public class AccentureTaskTimeManager {
 		//        popup.add(cb1);
 		//        popup.add(cb2);
 		//        popup.addSeparator();
-		Menu idiomaMenu = criarAdicionarMenuAoMenu(popup, messages.getMessage(MessagesEnum.MENU_ITEM_IDIOMA));
-		MenuItem portuguesItem = criarAdicionarItemAoMenu(idiomaMenu, messages.getMessage(MessagesEnum.MENU_ITEM_PORTUGUES));
-		MenuItem inglesItem = criarAdicionarItemAoMenu(idiomaMenu, messages.getMessage(MessagesEnum.MENU_ITEM_INGLES));
+		Menu idiomaMenu = criarAdicionarMenuAoMenu(popup, messagesProperties.getProperty("menu.item.idioma"));
+		MenuItem portuguesItem = criarAdicionarItemAoMenu(idiomaMenu, messagesProperties.getProperty("menu.item.portugues"));
+		MenuItem inglesItem = criarAdicionarItemAoMenu(idiomaMenu, messagesProperties.getProperty("menu.item.ingles"));
 		popup.addSeparator();
-		MenuItem aboutItem = criarAdicionarItemAoMenuPopup(popup, messages.getMessage(MessagesEnum.MENU_ITEM_SOBRE));
-		MenuItem exitItem = criarAdicionarItemAoMenuPopup(popup, messages.getMessage(MessagesEnum.MENU_ITEM_SAIR));
+		MenuItem aboutItem = criarAdicionarItemAoMenuPopup(popup, messagesProperties.getProperty("menu.item.sobre"));
+		MenuItem exitItem = criarAdicionarItemAoMenuPopup(popup, messagesProperties.getProperty("menu.item.sair"));
 
 		tarefasMenu.add(errorItem);
 		tarefasMenu.add(warningItem);
@@ -144,7 +144,7 @@ public class AccentureTaskTimeManager {
 		aboutItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JOptionPane.showMessageDialog(null,
-						messages.getMessage(MessagesEnum.TEXTO_SOBRE), messages.getMessage(MessagesEnum.NOME_APLICACAO), JOptionPane.PLAIN_MESSAGE);
+						messagesProperties.getProperty("texto.sobre"), messagesProperties.getProperty("nome.aplicacao"), JOptionPane.PLAIN_MESSAGE);
 			}
 		});
 
@@ -177,22 +177,22 @@ public class AccentureTaskTimeManager {
 				System.out.println(item.getLabel());
 				if ("Error".equals(item.getLabel())) {
 					//type = TrayIcon.MessageType.ERROR;
-					trayIcon.displayMessage(messages.getMessage(MessagesEnum.NOME_APLICACAO),
+					trayIcon.displayMessage(messagesProperties.getProperty("nome.aplicacao"),
 							"This is an error message", TrayIcon.MessageType.ERROR);
 
 				} else if ("Warning".equals(item.getLabel())) {
 					//type = TrayIcon.MessageType.WARNING;
-					trayIcon.displayMessage(messages.getMessage(MessagesEnum.NOME_APLICACAO),
+					trayIcon.displayMessage(messagesProperties.getProperty("nome.aplicacao"),
 							"This is a warning message", TrayIcon.MessageType.WARNING);
 
 				} else if ("Info".equals(item.getLabel())) {
 					//type = TrayIcon.MessageType.INFO;
-					trayIcon.displayMessage(messages.getMessage(MessagesEnum.NOME_APLICACAO),
+					trayIcon.displayMessage(messagesProperties.getProperty("nome.aplicacao"),
 							"This is an info message", TrayIcon.MessageType.INFO);
 
 				} else if ("None".equals(item.getLabel())) {
 					//type = TrayIcon.MessageType.NONE;
-					trayIcon.displayMessage(messages.getMessage(MessagesEnum.NOME_APLICACAO),
+					trayIcon.displayMessage(messagesProperties.getProperty("nome.aplicacao"),
 							"This is an ordinary message", TrayIcon.MessageType.NONE);
 				}
 			}
@@ -211,8 +211,8 @@ public class AccentureTaskTimeManager {
 		});
 
 		if(exibeMensagemAbertura){
-			trayIcon.displayMessage(messages.getMessage(MessagesEnum.NOME_APLICACAO),
-					messages.getMessage(MessagesEnum.MENSAGEM_ABERTURA), TrayIcon.MessageType.INFO);
+			trayIcon.displayMessage(messagesProperties.getProperty("nome.aplicacao"),
+					messagesProperties.getProperty("mensagem.abertura"), TrayIcon.MessageType.INFO);
 		}
 
 		portuguesItem.addActionListener(new ActionListener() {
@@ -245,7 +245,7 @@ public class AccentureTaskTimeManager {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Object nomeTarefa = JOptionPane.showInputDialog(null, messages.getMessage(MessagesEnum.JANELA_INSERIR_TAREFAS_INSERIR_TEXTO), messages.getMessage(MessagesEnum.JANELA_INSERIR_TAREFAS_TITULO), JOptionPane.PLAIN_MESSAGE, null, null, null);
+				Object nomeTarefa = JOptionPane.showInputDialog(null, messagesProperties.getProperty("janela.inserir.tarefas.inserir.texto"), messagesProperties.getProperty("janela.inserir.tarefas.titulo"), JOptionPane.PLAIN_MESSAGE, null, null, null);
 				final String caixaNomeTarefaText = nomeTarefa != null ? nomeTarefa.toString(): "";
 				dados.put("Tarefa", caixaNomeTarefaText);
 				arquivo.gravarObjetoNoArquivo(dados);
@@ -291,7 +291,7 @@ public class AccentureTaskTimeManager {
 	}
 
 	private static void selecionaLingua(String lingua){
-		messages = FactoryMessages.getInstance(lingua);
+		messagesProperties = MessagesFile.getLanguageFile(lingua);
 	}
 
 	public static String getUserDataDirectory() {
@@ -305,14 +305,19 @@ public class AccentureTaskTimeManager {
 	    calendar.set(Calendar.SECOND, 0);
 	    Date time = calendar.getTime();
 	    
+	    if(time.before(new Date())){
+	    	calendar.add(Calendar.DATE, 1);
+	    	time = calendar.getTime();
+	    }
+	    
         timer = new Timer();
         timer.schedule(new RemindTask(), time);
     }
 	
 	static class RemindTask extends TimerTask {
         public void run() {
-        	trayIcon.displayMessage(messages.getMessage(MessagesEnum.NOME_APLICACAO),
-					messages.getMessage(MessagesEnum.LANCAR_HORAS), TrayIcon.MessageType.INFO);
+        	trayIcon.displayMessage(messagesProperties.getProperty("nome.aplicacao"),
+					messagesProperties.getProperty("lancar.horas"), TrayIcon.MessageType.INFO);
             timer.cancel();
         }
     }
