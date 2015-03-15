@@ -16,7 +16,7 @@ public class ConfigFile {
 
 	@SuppressWarnings("unchecked")
 	public ConfigFile() {
-		config = new File("C:" + File.separator + "Users"  + File.separator + "Panta" + File.separator + "Documents" + File.separator + "config.txt");
+		config = new File("config" + File.separator + "config.txt");
 		fileContent = new HashMap<String, Object>();
 
 		try{

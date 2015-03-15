@@ -39,6 +39,8 @@ public class AccentureTaskTimeManager {
 	private static HashMap<String, Object> dados;
 	private static ConfigFile arquivo;
 	private static AppSingleton singleton;
+	
+	private static Menu tarefasMenu;
 
 	public static void main(String[] args) {
 		try {
@@ -59,7 +61,7 @@ public class AccentureTaskTimeManager {
 		configurarArquivo();
 
 		obterLinguaSalvaArquivo();
-
+		
 		UIManager.put("swing.boldMetal", Boolean.FALSE);
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -98,15 +100,21 @@ public class AccentureTaskTimeManager {
 
 		//        CheckboxMenuItem cb1 = new CheckboxMenuItem("Set auto size");
 		//        CheckboxMenuItem cb2 = new CheckboxMenuItem("Set tooltip");
-//		MenuItem tarefasItem = criarAdicionarItemAoMenu(popup, messagesProperties.getProperty(MENU.ITEM.INSERIR.TAREFAS));
 		MenuItem tarefasItem = criarAdicionarItemAoMenu(popup, messagesProperties.getProperty("menu.item.inserir.tarefas"));
-		Menu tarefasMenu = criarAdicionarMenuAoMenu(popup, messagesProperties.getProperty("menu.item.tarefas"));
-		tarefasMenu.setEnabled(false);
+		tarefasMenu = criarAdicionarMenuAoMenu(popup, messagesProperties.getProperty("menu.item.tarefas"));
+		
+		if(existemTarefasAdicionadas()){
+			criarAdicionarItemAoMenu(tarefasMenu, (String) dados.get("Tarefa"));
+			tarefasMenu.setEnabled(true);
+		}
+		else{
+			tarefasMenu.setEnabled(false);
+		}
 
-		MenuItem errorItem = new MenuItem("Error");
-		MenuItem warningItem = new MenuItem("Warning");
-		MenuItem infoItem = new MenuItem("Info");
-		MenuItem noneItem = new MenuItem("None");
+//		MenuItem errorItem = new MenuItem("Error");
+//		MenuItem warningItem = new MenuItem("Warning");
+//		MenuItem infoItem = new MenuItem("Info");
+//		MenuItem noneItem = new MenuItem("None");
 
 		//Add components to popup menu
 		popup.addSeparator();
@@ -120,10 +128,10 @@ public class AccentureTaskTimeManager {
 		MenuItem aboutItem = criarAdicionarItemAoMenuPopup(popup, messagesProperties.getProperty("menu.item.sobre"));
 		MenuItem exitItem = criarAdicionarItemAoMenuPopup(popup, messagesProperties.getProperty("menu.item.sair"));
 
-		tarefasMenu.add(errorItem);
-		tarefasMenu.add(warningItem);
-		tarefasMenu.add(infoItem);
-		tarefasMenu.add(noneItem);
+//		tarefasMenu.add(errorItem);
+//		tarefasMenu.add(warningItem);
+//		tarefasMenu.add(infoItem);
+//		tarefasMenu.add(noneItem);
 
 		trayIcon.setPopupMenu(popup);
 
@@ -198,10 +206,10 @@ public class AccentureTaskTimeManager {
 			}
 		};
 
-		errorItem.addActionListener(listener);
-		warningItem.addActionListener(listener);
-		infoItem.addActionListener(listener);
-		noneItem.addActionListener(listener);
+//		errorItem.addActionListener(listener);
+//		warningItem.addActionListener(listener);
+//		infoItem.addActionListener(listener);
+//		noneItem.addActionListener(listener);
 
 		exitItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -249,6 +257,7 @@ public class AccentureTaskTimeManager {
 				final String caixaNomeTarefaText = nomeTarefa != null ? nomeTarefa.toString(): "";
 				dados.put("Tarefa", caixaNomeTarefaText);
 				arquivo.gravarObjetoNoArquivo(dados);
+				reiniciaAplicacao();
 			}
 		});
 	}
@@ -296,6 +305,15 @@ public class AccentureTaskTimeManager {
 
 	public static String getUserDataDirectory() {
 		return System.getProperty("user.home") + File.separator + ".jstock" + File.separator;
+	}
+	
+	public static boolean existemTarefasAdicionadas(){
+		if(dados.containsKey("Tarefa")){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 	
 	public static void configurarTimer() {
