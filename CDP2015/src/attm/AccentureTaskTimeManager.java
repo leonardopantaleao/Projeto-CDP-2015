@@ -24,13 +24,14 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import attm.chronometer.Cronometro;
 import attm.data.AppSingleton;
 import attm.data.ConfigFile;
 import attm.messages.MessagesFile;
 
 public class AccentureTaskTimeManager {
 	private static Timer timer;
-	private static Properties messagesProperties;
+	public static Properties messagesProperties;
 	private static TrayIcon trayIcon;
 	private static SystemTray tray;
 	private static boolean exibeMensagemAbertura = true;
@@ -41,6 +42,8 @@ public class AccentureTaskTimeManager {
 	private static AppSingleton singleton;
 	
 	private static Menu tarefasMenu;
+	
+	private static Cronometro cronometro;
 
 	public static void main(String[] args) {
 		try {
@@ -85,6 +88,9 @@ public class AccentureTaskTimeManager {
 	}
 
 	private static void criarExibirGUI() {
+		cronometro = new Cronometro();
+		cronometro.setVisible(false);
+		
 		UIManager.put("OptionPane.cancelButtonText", messagesProperties.getProperty("geral.cancelar"));
 
 		//Check the SystemTray support
@@ -104,7 +110,7 @@ public class AccentureTaskTimeManager {
 		tarefasMenu = criarAdicionarMenuAoMenu(popup, messagesProperties.getProperty("menu.item.tarefas"));
 		
 		if(existemTarefasAdicionadas()){
-			criarAdicionarItemAoMenu(tarefasMenu, (String) dados.get("Tarefa"));
+			criarAdicionarTarefaItemAoMenu(tarefasMenu, (String) dados.get("Tarefa"));
 			tarefasMenu.setEnabled(true);
 		}
 		else{
@@ -286,9 +292,24 @@ public class AccentureTaskTimeManager {
 		return menu;
 	}
 
-	public static MenuItem criarAdicionarItemAoMenu(Menu menu, String nomeLabelItem){
+	public static MenuItem criarAdicionarItemAoMenu(final Menu menu, final String nomeLabelItem){
 		MenuItem item = new MenuItem(nomeLabelItem);
 		menu.add(item);
+		return item;
+	}
+	
+	public static MenuItem criarAdicionarTarefaItemAoMenu(final Menu menu, final String nomeLabelItem){
+		MenuItem item = new MenuItem(nomeLabelItem);
+		menu.add(item);
+		item.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				cronometro.setTitle(nomeLabelItem);
+				cronometro.setLocationRelativeTo(null);
+				cronometro.setVisible(true);
+			}
+		});
 		return item;
 	}
 
@@ -335,7 +356,7 @@ public class AccentureTaskTimeManager {
 	static class RemindTask extends TimerTask {
         public void run() {
         	trayIcon.displayMessage(messagesProperties.getProperty("nome.aplicacao"),
-					messagesProperties.getProperty("lancar.horas"), TrayIcon.MessageType.INFO);
+					messagesProperties.getProperty("cronometro.lancar.horas"), TrayIcon.MessageType.INFO);
             timer.cancel();
         }
     }
