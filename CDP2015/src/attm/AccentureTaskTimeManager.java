@@ -128,6 +128,7 @@ public class AccentureTaskTimeManager {
 		//        popup.add(cb2);
 		//        popup.addSeparator();
 		Menu idiomaMenu = criarAdicionarMenuAoMenu(popup, messagesProperties.getProperty("menu.item.idioma"));
+		MenuItem configurarAlarmeMenuItem = criarAdicionarItemAoMenu(popup, messagesProperties.getProperty("menu.item.configurar.alarme"));
 		MenuItem portuguesItem = criarAdicionarItemAoMenu(idiomaMenu, messagesProperties.getProperty("menu.item.portugues"));
 		MenuItem inglesItem = criarAdicionarItemAoMenu(idiomaMenu, messagesProperties.getProperty("menu.item.ingles"));
 		popup.addSeparator();
