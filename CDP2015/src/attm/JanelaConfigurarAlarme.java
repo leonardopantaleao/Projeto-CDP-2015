@@ -3,8 +3,10 @@ package attm;
 import java.util.HashMap;
 
 import javax.swing.BorderFactory;
+import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -23,6 +25,8 @@ public class JanelaConfigurarAlarme extends JFrame{
 	private static int minutos;
 	private static JTextField horasJTextField;
 	private static JTextField minutosJTextField;
+	private static JLabel horasJLabel;
+	private static JLabel minutosJLabel;
 	private static JButton salvarJButton;
 	private static JButton fecharJButton;
 	
@@ -32,8 +36,11 @@ public class JanelaConfigurarAlarme extends JFrame{
 	
 	private static JPanel painelPrincipal;
 	
-	public static void main(String [] args){
+	public JanelaConfigurarAlarme(){
 		initComponents();
+	}
+	
+	public static void main(String [] args){
 		
 		try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -59,15 +66,21 @@ public class JanelaConfigurarAlarme extends JFrame{
         });
 	}
 	
-	private static void initComponents(){
+	private void initComponents(){
 		configurarArquivo();
+		
+		this.setTitle("Configurar Alarme");
 		
 		String horasEmArquivo = dados.get("Horas") != null ? (String) dados.get("Horas") : "18";
 		horas = Integer.parseInt(horasEmArquivo);
 		String minutosEmArquivo = dados.get("Minutos") != null ? (String) dados.get("Minutos") : "25";
 		minutos = Integer.parseInt(minutosEmArquivo);
 		
+		horasJLabel = new JLabel("Horas:");
 		horasJTextField = new JTextField();
+		horasJTextField.setColumns(2);
+		horasJTextField.setText(horas + "");
+		minutosJLabel = new JLabel("Minutos");
 		minutosJTextField = new JTextField();
 		
 //		Properties messagesProperties = AccentureTaskTimeManager.messagesProperties;
@@ -75,10 +88,41 @@ public class JanelaConfigurarAlarme extends JFrame{
 //		fecharJButton = new JButton(messagesProperties.getProperty("geral.fechar"));
 		
 		salvarJButton = new JButton("Salvar");
+		salvarJButton.setVisible(true);
 		fecharJButton = new JButton("Fechar");
 		
 		painelPrincipal = new JPanel();
 		painelPrincipal.setBorder(BorderFactory.createEtchedBorder());
+		
+		GroupLayout groupLayout = new GroupLayout(painelPrincipal);
+		painelPrincipal.setLayout(groupLayout);
+        groupLayout.setHorizontalGroup(
+            groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(groupLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(horasJLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(horasJTextField)
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        
+        
+//        
+        groupLayout.setVerticalGroup(
+        		groupLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(groupLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(groupLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(horasJLabel)
+                        .addComponent(horasJTextField))
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            );
+		
+		
+        
+		this.add(painelPrincipal);
+		this.setLocationRelativeTo(null);
+        pack();
 		
 		
 		
