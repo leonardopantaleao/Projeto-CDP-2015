@@ -1,14 +1,16 @@
 package attm;
 
+import java.awt.GridLayout;
 import java.util.HashMap;
 
 import javax.swing.BorderFactory;
-import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
 import attm.chronometer.Cronometro;
 import attm.data.AppSingleton;
@@ -76,12 +78,14 @@ public class JanelaConfigurarAlarme extends JFrame{
 		String minutosEmArquivo = dados.get("Minutos") != null ? (String) dados.get("Minutos") : "25";
 		minutos = Integer.parseInt(minutosEmArquivo);
 		
-		horasJLabel = new JLabel("Horas:");
+		horasJLabel = new JLabel("Horas");
 		horasJTextField = new JTextField();
 		horasJTextField.setColumns(2);
 		horasJTextField.setText(horas + "");
 		minutosJLabel = new JLabel("Minutos");
 		minutosJTextField = new JTextField();
+		minutosJTextField.setColumns(2);
+		minutosJTextField.setText(minutos + "");
 		
 //		Properties messagesProperties = AccentureTaskTimeManager.messagesProperties;
 //		salvarJButton = new JButton(messagesProperties.getProperty("geral.salvar"));
@@ -94,37 +98,42 @@ public class JanelaConfigurarAlarme extends JFrame{
 		painelPrincipal = new JPanel();
 		painelPrincipal.setBorder(BorderFactory.createEtchedBorder());
 		
-		GroupLayout groupLayout = new GroupLayout(painelPrincipal);
-		painelPrincipal.setLayout(groupLayout);
-        groupLayout.setHorizontalGroup(
-            groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(groupLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(horasJLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(horasJTextField)
-                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        
-        
-//        
-        groupLayout.setVerticalGroup(
-        		groupLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(groupLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(groupLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(horasJLabel)
-                        .addComponent(horasJTextField))
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            );
+		JLabel vazio = new JLabel("");
+		JLabel intervalo = new JLabel("");
+		vazio.setHorizontalAlignment(SwingConstants.CENTER);
+		JLabel doisPontos = new JLabel(":");
+		doisPontos.setHorizontalAlignment(SwingConstants.CENTER);
 		
+		GridLayout grid = new GridLayout();
+		JPanel painelSetarHoras = new JPanel();
+		painelSetarHoras.setLayout(grid);
+		grid.setColumns(3);
+		grid.setRows(2);
+		horasJLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		minutosJLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		horasJTextField.setHorizontalAlignment(SwingConstants.CENTER);
+		minutosJTextField.setHorizontalAlignment(SwingConstants.CENTER);
 		
+		painelSetarHoras.add(horasJLabel);
+		painelSetarHoras.add(vazio);
+		painelSetarHoras.add(minutosJLabel);
+		
+		painelSetarHoras.add(horasJTextField);
+		painelSetarHoras.add(doisPontos);
+		painelSetarHoras.add(minutosJTextField);
+		
+//		painelSetarHoras.add(salvarJButton);
+//		painelSetarHoras.add(intervalo);
+//		painelSetarHoras.add(fecharJButton);
+		
+		painelSetarHoras.setBorder(new EmptyBorder(10, 80, 10, 80));
         
 		this.add(painelPrincipal);
+		this.add(painelSetarHoras);
+//		this.add(painelTextAreas);
 		this.setLocationRelativeTo(null);
+		this.setResizable(false);
         pack();
-		
-		
 		
 	}
 	
