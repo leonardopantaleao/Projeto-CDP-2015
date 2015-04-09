@@ -14,6 +14,7 @@ import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -27,6 +28,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import attm.chronometer.Cronometro;
 import attm.data.AppSingleton;
 import attm.data.ConfigFile;
+import attm.data.Tarefa;
 import attm.messages.MessagesFile;
 
 public class AccentureTaskTimeManager {
@@ -45,6 +47,8 @@ public class AccentureTaskTimeManager {
 	
 	private static Cronometro cronometro;
 	private static JanelaConfigurarAlarme janelaAlarme;
+	
+	private static LinkedList<Tarefa> tarefasAdicionadas;
 
 	public static void main(String[] args) {
 		try {
@@ -88,11 +92,17 @@ public class AccentureTaskTimeManager {
 		dados = singleton.getConfig();
 	}
 
+	@SuppressWarnings("unchecked")
 	private static void criarExibirGUI() {
 		cronometro = new Cronometro();
 		cronometro.setVisible(false);
 		janelaAlarme = new JanelaConfigurarAlarme();
 		janelaAlarme.setVisible(false);
+		
+		tarefasAdicionadas = (LinkedList<Tarefa>) dados.get("Tarefas");
+		if(tarefasAdicionadas == null){
+			tarefasAdicionadas = new LinkedList<Tarefa>();
+		}
 		
 		UIManager.put("OptionPane.cancelButtonText", messagesProperties.getProperty("geral.cancelar"));
 		
@@ -275,6 +285,13 @@ public class AccentureTaskTimeManager {
 				Object nomeTarefa = JOptionPane.showInputDialog(null, messagesProperties.getProperty("janela.inserir.tarefas.inserir.texto"), messagesProperties.getProperty("janela.inserir.tarefas.titulo"), JOptionPane.PLAIN_MESSAGE, null, null, null);
 				final String caixaNomeTarefaText = nomeTarefa != null ? nomeTarefa.toString(): "";
 				dados.put("Tarefa", caixaNomeTarefaText);
+				//Adicao da lista de tarefas
+				int indiceAtual = tarefasAdicionadas.size();
+				Tarefa tarefa = new Tarefa(indiceAtual, caixaNomeTarefaText.toString(), 0, 0);
+				tarefasAdicionadas.add(tarefa);
+				
+				dados.put("Tarefas", tarefasAdicionadas);
+				
 				arquivo.gravarObjetoNoArquivo(dados);
 				reiniciaAplicacao();
 			}

@@ -32,9 +32,9 @@ public class ConfigFile {
 			}
 
 		} catch(IOException e) {
-			System.out.println("Erro!");
+			System.out.println("Erro de IO!");
 		} catch (ClassNotFoundException e) {
-			System.out.println("Erro!");
+			System.out.println("Classe nao encontrada!");
 		}
 	}
 
