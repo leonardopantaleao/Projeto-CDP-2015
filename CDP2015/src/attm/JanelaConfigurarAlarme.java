@@ -4,6 +4,7 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -11,6 +12,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -41,6 +43,8 @@ public class JanelaConfigurarAlarme extends JFrame{
 	private static AppSingleton singleton;
 	
 	private static JPanel painelPrincipal;
+	
+	private static Properties messagesProperties;
 	
 	public JanelaConfigurarAlarme(){
 		initComponents();
@@ -74,7 +78,7 @@ public class JanelaConfigurarAlarme extends JFrame{
 	
 	private void initComponents(){
 		configurarArquivo();
-		Properties messagesProperties = AccentureTaskTimeManager.messagesProperties;
+		messagesProperties = AccentureTaskTimeManager.messagesProperties;
 		
 		this.setTitle(messagesProperties.getProperty("geral.configurar.alarme"));
 		
@@ -159,8 +163,15 @@ public class JanelaConfigurarAlarme extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				salvarHorasMinutosNoArquivo();
-				AccentureTaskTimeManager.configurarTimer();
+				try{
+					salvarHorasMinutosNoArquivo();
+					AccentureTaskTimeManager.configurarTimer();
+					JOptionPane.showMessageDialog(getContentPane(), messagesProperties.getProperty("janela.alarme.salvar.sucesso"), messagesProperties.getProperty("janela.alarme.salvar.sucesso.titulo")
+							, JOptionPane.INFORMATION_MESSAGE);
+				}catch(IOException io){
+					JOptionPane.showMessageDialog(getContentPane(), messagesProperties.getProperty("janela.alarme.salvar.falha"), messagesProperties.getProperty("janela.alarme.salvar.falha.titulo")
+							, JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		
@@ -178,7 +189,7 @@ public class JanelaConfigurarAlarme extends JFrame{
 		dados = singleton.getConfig();
 	}
 	
-	private void salvarHorasMinutosNoArquivo(){
+	private void salvarHorasMinutosNoArquivo() throws IOException{
 		dados.put("Horas", horasJTextField.getText().toString());
 		dados.put("Minutos", minutosJTextField.getText().toString());
 		arquivo.gravarObjetoNoArquivo(dados);

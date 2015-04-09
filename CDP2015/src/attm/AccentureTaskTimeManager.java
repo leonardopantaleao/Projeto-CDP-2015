@@ -95,6 +95,7 @@ public class AccentureTaskTimeManager {
 		janelaAlarme.setVisible(false);
 		
 		UIManager.put("OptionPane.cancelButtonText", messagesProperties.getProperty("geral.cancelar"));
+		
 
 		//Check the SystemTray support
 		if (!SystemTray.isSupported()) {
@@ -188,33 +189,33 @@ public class AccentureTaskTimeManager {
 		//            }
 		//        });
 
-		ActionListener listener = new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				MenuItem item = (MenuItem)e.getSource();
-				//TrayIcon.MessageType type = null;
-				System.out.println(item.getLabel());
-				if ("Error".equals(item.getLabel())) {
-					//type = TrayIcon.MessageType.ERROR;
-					trayIcon.displayMessage(messagesProperties.getProperty("nome.aplicacao"),
-							"This is an error message", TrayIcon.MessageType.ERROR);
-
-				} else if ("Warning".equals(item.getLabel())) {
-					//type = TrayIcon.MessageType.WARNING;
-					trayIcon.displayMessage(messagesProperties.getProperty("nome.aplicacao"),
-							"This is a warning message", TrayIcon.MessageType.WARNING);
-
-				} else if ("Info".equals(item.getLabel())) {
-					//type = TrayIcon.MessageType.INFO;
-					trayIcon.displayMessage(messagesProperties.getProperty("nome.aplicacao"),
-							"This is an info message", TrayIcon.MessageType.INFO);
-
-				} else if ("None".equals(item.getLabel())) {
-					//type = TrayIcon.MessageType.NONE;
-					trayIcon.displayMessage(messagesProperties.getProperty("nome.aplicacao"),
-							"This is an ordinary message", TrayIcon.MessageType.NONE);
-				}
-			}
-		};
+//		ActionListener listener = new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				MenuItem item = (MenuItem)e.getSource();
+//				//TrayIcon.MessageType type = null;
+//				System.out.println(item.getLabel());
+//				if ("Error".equals(item.getLabel())) {
+//					//type = TrayIcon.MessageType.ERROR;
+//					trayIcon.displayMessage(messagesProperties.getProperty("nome.aplicacao"),
+//							"This is an error message", TrayIcon.MessageType.ERROR);
+//
+//				} else if ("Warning".equals(item.getLabel())) {
+//					//type = TrayIcon.MessageType.WARNING;
+//					trayIcon.displayMessage(messagesProperties.getProperty("nome.aplicacao"),
+//							"This is a warning message", TrayIcon.MessageType.WARNING);
+//
+//				} else if ("Info".equals(item.getLabel())) {
+//					//type = TrayIcon.MessageType.INFO;
+//					trayIcon.displayMessage(messagesProperties.getProperty("nome.aplicacao"),
+//							"This is an info message", TrayIcon.MessageType.INFO);
+//
+//				} else if ("None".equals(item.getLabel())) {
+//					//type = TrayIcon.MessageType.NONE;
+//					trayIcon.displayMessage(messagesProperties.getProperty("nome.aplicacao"),
+//							"This is an ordinary message", TrayIcon.MessageType.NONE);
+//				}
+//			}
+//		};
 		
 		configurarAlarmeMenuItem.addActionListener(new ActionListener() {
 			
