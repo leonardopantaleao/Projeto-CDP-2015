@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Properties;
 
+import javax.swing.JFrame;
 import javax.swing.Timer;
 
 import attm.AccentureTaskTimeManager;
@@ -133,6 +134,8 @@ public class Cronometro extends javax.swing.JFrame {
                 .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
+        
+        this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

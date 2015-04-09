@@ -44,11 +44,12 @@ public class AccentureTaskTimeManager {
 	private static Menu tarefasMenu;
 	
 	private static Cronometro cronometro;
+	private static JanelaConfigurarAlarme janelaAlarme;
 
 	public static void main(String[] args) {
 		try {
-//			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+//			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
 		} catch (UnsupportedLookAndFeelException ex) {
 			ex.printStackTrace();
 		} catch (IllegalAccessException ex) {
@@ -59,9 +60,9 @@ public class AccentureTaskTimeManager {
 			ex.printStackTrace();
 		}
 		
-		configurarTimer();
-
 		configurarArquivo();
+		
+		configurarTimer();
 
 		obterLinguaSalvaArquivo();
 		
@@ -90,6 +91,8 @@ public class AccentureTaskTimeManager {
 	private static void criarExibirGUI() {
 		cronometro = new Cronometro();
 		cronometro.setVisible(false);
+		janelaAlarme = new JanelaConfigurarAlarme();
+		janelaAlarme.setVisible(false);
 		
 		UIManager.put("OptionPane.cancelButtonText", messagesProperties.getProperty("geral.cancelar"));
 
@@ -212,6 +215,14 @@ public class AccentureTaskTimeManager {
 				}
 			}
 		};
+		
+		configurarAlarmeMenuItem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				janelaAlarme.setVisible(true);
+			}
+		});
 
 //		errorItem.addActionListener(listener);
 //		warningItem.addActionListener(listener);
@@ -340,8 +351,10 @@ public class AccentureTaskTimeManager {
 	
 	public static void configurarTimer() {
 		Calendar calendar = Calendar.getInstance();
-	    calendar.set(Calendar.HOUR_OF_DAY, 18);
-	    calendar.set(Calendar.MINUTE, 25);
+		String horasEmArquivo = dados.get("Horas") != null ? (String) dados.get("Horas") : "18";
+		String minutosEmArquivo = dados.get("Minutos") != null ? (String) dados.get("Minutos") : "25";
+	    calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(horasEmArquivo));
+	    calendar.set(Calendar.MINUTE, Integer.parseInt(minutosEmArquivo));
 	    calendar.set(Calendar.SECOND, 0);
 	    Date time = calendar.getTime();
 	    
