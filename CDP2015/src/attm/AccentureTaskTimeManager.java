@@ -42,18 +42,18 @@ public class AccentureTaskTimeManager {
 	private static HashMap<String, Object> dados;
 	private static ConfigFile arquivo;
 	private static AppSingleton singleton;
-	
+
 	private static Menu tarefasMenu;
-	
+
 	private static LinkedList<Cronometro> listaJanelasCronometro;
 	private static JanelaConfigurarAlarme janelaAlarme;
-	
+
 	private static LinkedList<Tarefa> tarefasAdicionadas;
 
 	public static void main(String[] args) {
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-//			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+			//			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
 		} catch (UnsupportedLookAndFeelException ex) {
 			ex.printStackTrace();
 		} catch (IllegalAccessException ex) {
@@ -63,13 +63,13 @@ public class AccentureTaskTimeManager {
 		} catch (ClassNotFoundException ex) {
 			ex.printStackTrace();
 		}
-		
+
 		configurarArquivo();
-		
+
 		configurarTimer();
 
 		obterLinguaSalvaArquivo();
-		
+
 		UIManager.put("swing.boldMetal", Boolean.FALSE);
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -96,16 +96,18 @@ public class AccentureTaskTimeManager {
 	private static void criarExibirGUI() {
 		janelaAlarme = new JanelaConfigurarAlarme();
 		janelaAlarme.setVisible(false);
-		
+
 		tarefasAdicionadas = (LinkedList<Tarefa>) dados.get("Tarefas");
 		if(tarefasAdicionadas == null){
 			tarefasAdicionadas = new LinkedList<Tarefa>();
 		}
-		
+
 		iniciarJanelasCronometro();
-		
+
 		UIManager.put("OptionPane.cancelButtonText", messagesProperties.getProperty("geral.cancelar"));
-		
+		UIManager.put("OptionPane.yesButtonText", messagesProperties.getProperty("geral.sim"));
+		UIManager.put("OptionPane.noButtonText", messagesProperties.getProperty("geral.nao"));
+
 
 		//Check the SystemTray support
 		if (!SystemTray.isSupported()) {
@@ -122,19 +124,22 @@ public class AccentureTaskTimeManager {
 		//        CheckboxMenuItem cb2 = new CheckboxMenuItem("Set tooltip");
 		MenuItem tarefasItem = criarAdicionarItemAoMenu(popup, messagesProperties.getProperty("menu.item.inserir.tarefas"));
 		tarefasMenu = criarAdicionarMenuAoMenu(popup, messagesProperties.getProperty("menu.item.tarefas"));
-		
+
 		if(existemTarefasAdicionadas()){
-			criarAdicionarTarefaItemAoMenu(tarefasMenu, (String) dados.get("Tarefa"));
+			for(Tarefa tarefa: tarefasAdicionadas){
+				criarAdicionarTarefaItemAoMenu(tarefasMenu, tarefa.getNomeTarefa());
+			}
+			//			criarAdicionarTarefaItemAoMenu(tarefasMenu, (String) dados.get("Tarefa"));
 			tarefasMenu.setEnabled(true);
 		}
 		else{
 			tarefasMenu.setEnabled(false);
 		}
 
-//		MenuItem errorItem = new MenuItem("Error");
-//		MenuItem warningItem = new MenuItem("Warning");
-//		MenuItem infoItem = new MenuItem("Info");
-//		MenuItem noneItem = new MenuItem("None");
+		//		MenuItem errorItem = new MenuItem("Error");
+		//		MenuItem warningItem = new MenuItem("Warning");
+		//		MenuItem infoItem = new MenuItem("Info");
+		//		MenuItem noneItem = new MenuItem("None");
 
 		//Add components to popup menu
 		popup.addSeparator();
@@ -149,10 +154,10 @@ public class AccentureTaskTimeManager {
 		MenuItem aboutItem = criarAdicionarItemAoMenuPopup(popup, messagesProperties.getProperty("menu.item.sobre"));
 		MenuItem exitItem = criarAdicionarItemAoMenuPopup(popup, messagesProperties.getProperty("menu.item.sair"));
 
-//		tarefasMenu.add(errorItem);
-//		tarefasMenu.add(warningItem);
-//		tarefasMenu.add(infoItem);
-//		tarefasMenu.add(noneItem);
+		//		tarefasMenu.add(errorItem);
+		//		tarefasMenu.add(warningItem);
+		//		tarefasMenu.add(infoItem);
+		//		tarefasMenu.add(noneItem);
 
 		trayIcon.setPopupMenu(popup);
 
@@ -163,12 +168,12 @@ public class AccentureTaskTimeManager {
 			return;
 		}
 
-		trayIcon.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null,
-						"This dialog box is run from System Tray");
-			}
-		});
+		//		trayIcon.addActionListener(new ActionListener() {
+		//			public void actionPerformed(ActionEvent e) {
+		//				JOptionPane.showMessageDialog(null,
+		//						"This dialog box is run from System Tray");
+		//			}
+		//		});
 
 		aboutItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -178,7 +183,7 @@ public class AccentureTaskTimeManager {
 		});
 
 		//        cb1.addItemListener(new ItemListener() {
-			//            public void itemStateChanged(ItemEvent e) {
+		//            public void itemStateChanged(ItemEvent e) {
 		//                int cb1Id = e.getStateChange();
 		//                if (cb1Id == ItemEvent.SELECTED){
 		//                    trayIcon.setImageAutoSize(true);
@@ -199,46 +204,46 @@ public class AccentureTaskTimeManager {
 		//            }
 		//        });
 
-//		ActionListener listener = new ActionListener() {
-//			public void actionPerformed(ActionEvent e) {
-//				MenuItem item = (MenuItem)e.getSource();
-//				//TrayIcon.MessageType type = null;
-//				System.out.println(item.getLabel());
-//				if ("Error".equals(item.getLabel())) {
-//					//type = TrayIcon.MessageType.ERROR;
-//					trayIcon.displayMessage(messagesProperties.getProperty("nome.aplicacao"),
-//							"This is an error message", TrayIcon.MessageType.ERROR);
-//
-//				} else if ("Warning".equals(item.getLabel())) {
-//					//type = TrayIcon.MessageType.WARNING;
-//					trayIcon.displayMessage(messagesProperties.getProperty("nome.aplicacao"),
-//							"This is a warning message", TrayIcon.MessageType.WARNING);
-//
-//				} else if ("Info".equals(item.getLabel())) {
-//					//type = TrayIcon.MessageType.INFO;
-//					trayIcon.displayMessage(messagesProperties.getProperty("nome.aplicacao"),
-//							"This is an info message", TrayIcon.MessageType.INFO);
-//
-//				} else if ("None".equals(item.getLabel())) {
-//					//type = TrayIcon.MessageType.NONE;
-//					trayIcon.displayMessage(messagesProperties.getProperty("nome.aplicacao"),
-//							"This is an ordinary message", TrayIcon.MessageType.NONE);
-//				}
-//			}
-//		};
-		
+		//		ActionListener listener = new ActionListener() {
+		//			public void actionPerformed(ActionEvent e) {
+		//				MenuItem item = (MenuItem)e.getSource();
+		//				//TrayIcon.MessageType type = null;
+		//				System.out.println(item.getLabel());
+		//				if ("Error".equals(item.getLabel())) {
+		//					//type = TrayIcon.MessageType.ERROR;
+		//					trayIcon.displayMessage(messagesProperties.getProperty("nome.aplicacao"),
+		//							"This is an error message", TrayIcon.MessageType.ERROR);
+		//
+		//				} else if ("Warning".equals(item.getLabel())) {
+		//					//type = TrayIcon.MessageType.WARNING;
+		//					trayIcon.displayMessage(messagesProperties.getProperty("nome.aplicacao"),
+		//							"This is a warning message", TrayIcon.MessageType.WARNING);
+		//
+		//				} else if ("Info".equals(item.getLabel())) {
+		//					//type = TrayIcon.MessageType.INFO;
+		//					trayIcon.displayMessage(messagesProperties.getProperty("nome.aplicacao"),
+		//							"This is an info message", TrayIcon.MessageType.INFO);
+		//
+		//				} else if ("None".equals(item.getLabel())) {
+		//					//type = TrayIcon.MessageType.NONE;
+		//					trayIcon.displayMessage(messagesProperties.getProperty("nome.aplicacao"),
+		//							"This is an ordinary message", TrayIcon.MessageType.NONE);
+		//				}
+		//			}
+		//		};
+
 		configurarAlarmeMenuItem.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				janelaAlarme.setVisible(true);
 			}
 		});
 
-//		errorItem.addActionListener(listener);
-//		warningItem.addActionListener(listener);
-//		infoItem.addActionListener(listener);
-//		noneItem.addActionListener(listener);
+		//		errorItem.addActionListener(listener);
+		//		warningItem.addActionListener(listener);
+		//		infoItem.addActionListener(listener);
+		//		noneItem.addActionListener(listener);
 
 		exitItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -256,12 +261,18 @@ public class AccentureTaskTimeManager {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				selecionaLingua("Português-BR");
-				dados.put("Lingua", "Português-BR");
-				arquivo.gravarObjetoNoArquivo(dados);
-				reiniciaAplicacao();
-				//				popup.removeAll();d
-				//				}
+				int resposta = JOptionPane.showConfirmDialog(null, messagesProperties.getProperty("janela.mudar.lingua.pergunta"), messagesProperties.getProperty("janela.mudar.lingua"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+				if (resposta == JOptionPane.NO_OPTION) {
+					//Clicou em Não.
+				} else if (resposta == JOptionPane.YES_OPTION) {
+					selecionaLingua("Português-BR");
+					dados.put("Lingua", "Português-BR");
+					arquivo.gravarObjetoNoArquivo(dados);
+					reiniciaAplicacao();
+				} else if (resposta == JOptionPane.CLOSED_OPTION) {
+					//Clicou em fechar.
+				}
+
 			}
 		});
 
@@ -269,12 +280,17 @@ public class AccentureTaskTimeManager {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				selecionaLingua("English");
-				dados.put("Lingua", "English");
-				arquivo.gravarObjetoNoArquivo(dados);
-				reiniciaAplicacao();
-				//				popup.removeAll();d
-				//				}
+				int resposta = JOptionPane.showConfirmDialog(null, messagesProperties.getProperty("janela.mudar.lingua.pergunta"), messagesProperties.getProperty("janela.mudar.lingua"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+				if (resposta == JOptionPane.NO_OPTION) {
+					//Clicou em Não.
+				} else if (resposta == JOptionPane.YES_OPTION) {
+					selecionaLingua("English");
+					dados.put("Lingua", "English");
+					arquivo.gravarObjetoNoArquivo(dados);
+					reiniciaAplicacao();
+				} else if (resposta == JOptionPane.CLOSED_OPTION) {
+					//Clicou em fechar.
+				}
 			}
 		});
 
@@ -289,11 +305,9 @@ public class AccentureTaskTimeManager {
 				int indiceAtual = tarefasAdicionadas.size();
 				Tarefa tarefa = new Tarefa(indiceAtual, caixaNomeTarefaText.toString(), 0, 0);
 				tarefasAdicionadas.add(tarefa);
-				
 				dados.put("Tarefas", tarefasAdicionadas);
-				
 				arquivo.gravarObjetoNoArquivo(dados);
-				reiniciaAplicacao();
+				criarAdicionarTarefaItemAoMenu(tarefasMenu, caixaNomeTarefaText);
 			}
 		});
 	}
@@ -306,9 +320,9 @@ public class AccentureTaskTimeManager {
 			janelaCronometro.setLocationRelativeTo(null);
 			listaJanelasCronometro.add(janelaCronometro);
 		}
-		
+
 		int indiceJanelaCronometro = 0;
-		
+
 		//Atribui a cada janela o título da tarefa
 		for(Cronometro janelaCronometro: listaJanelasCronometro){
 			janelaCronometro.setTitle(tarefasAdicionadas.get(indiceJanelaCronometro).getNomeTarefa());
@@ -345,20 +359,20 @@ public class AccentureTaskTimeManager {
 		menu.add(item);
 		return item;
 	}
-	
+
 	public static MenuItem criarAdicionarTarefaItemAoMenu(final Menu menu, final String nomeLabelItem){
 		MenuItem item = new MenuItem(nomeLabelItem);
 		menu.add(item);
 		item.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				listaJanelasCronometro.get(buscarIndiceTarefaClicada(nomeLabelItem));
+				listaJanelasCronometro.get(buscarIndiceTarefaClicada(nomeLabelItem)).setVisible(true);
 			}
-			
+
 			private int buscarIndiceTarefaClicada(String nomeLabelItem){
 				int indiceTarefaClicada = 0;
-				
+
 				for(Tarefa tarefaClicada: tarefasAdicionadas){
 					if(!tarefaClicada.getNomeTarefa().equals(nomeLabelItem)){
 						indiceTarefaClicada++;
@@ -367,13 +381,13 @@ public class AccentureTaskTimeManager {
 						break;
 					}
 				}
-				
+
 				return indiceTarefaClicada;
 			}
 		});
 		return item;
 	}
-	
+
 
 	private static void reiniciaAplicacao(){
 		exibeMensagemAbertura = false;
@@ -389,39 +403,39 @@ public class AccentureTaskTimeManager {
 	public static String getUserDataDirectory() {
 		return System.getProperty("user.home") + File.separator + ".jstock" + File.separator;
 	}
-	
+
 	public static boolean existemTarefasAdicionadas(){
-		if(dados.containsKey("Tarefa")){
+		if(dados.containsKey("Tarefas")){
 			return true;
 		}
 		else{
 			return false;
 		}
 	}
-	
+
 	public static void configurarTimer() {
 		Calendar calendar = Calendar.getInstance();
 		String horasEmArquivo = dados.get("Horas") != null ? (String) dados.get("Horas") : "18";
 		String minutosEmArquivo = dados.get("Minutos") != null ? (String) dados.get("Minutos") : "25";
-	    calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(horasEmArquivo));
-	    calendar.set(Calendar.MINUTE, Integer.parseInt(minutosEmArquivo));
-	    calendar.set(Calendar.SECOND, 0);
-	    Date time = calendar.getTime();
-	    
-	    if(time.before(new Date())){
-	    	calendar.add(Calendar.DATE, 1);
-	    	time = calendar.getTime();
-	    }
-	    
-        timer = new Timer();
-        timer.schedule(new RemindTask(), time);
-    }
-	
+		calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(horasEmArquivo));
+		calendar.set(Calendar.MINUTE, Integer.parseInt(minutosEmArquivo));
+		calendar.set(Calendar.SECOND, 0);
+		Date time = calendar.getTime();
+
+		if(time.before(new Date())){
+			calendar.add(Calendar.DATE, 1);
+			time = calendar.getTime();
+		}
+
+		timer = new Timer();
+		timer.schedule(new RemindTask(), time);
+	}
+
 	static class RemindTask extends TimerTask {
-        public void run() {
-        	trayIcon.displayMessage(messagesProperties.getProperty("nome.aplicacao"),
+		public void run() {
+			trayIcon.displayMessage(messagesProperties.getProperty("nome.aplicacao"),
 					messagesProperties.getProperty("cronometro.lancar.horas"), TrayIcon.MessageType.INFO);
-            timer.cancel();
-        }
-    }
+			timer.cancel();
+		}
+	}
 }
