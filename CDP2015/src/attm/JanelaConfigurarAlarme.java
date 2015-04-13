@@ -194,4 +194,5 @@ public class JanelaConfigurarAlarme extends JFrame{
 		dados.put("Minutos", minutosJTextField.getText().toString());
 		arquivo.gravarObjetoNoArquivo(dados);
 	}
+	
 }

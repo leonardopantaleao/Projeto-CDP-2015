@@ -49,7 +49,7 @@ public class AccentureTaskTimeManager {
 	private static JanelaConfigurarAlarme janelaAlarme;
 
 	private static LinkedList<Tarefa> tarefasAdicionadas;
-
+	
 	public static void main(String[] args) {
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
@@ -102,7 +102,9 @@ public class AccentureTaskTimeManager {
 			tarefasAdicionadas = new LinkedList<Tarefa>();
 		}
 
+		listaJanelasCronometro = new LinkedList<Cronometro>();
 		iniciarJanelasCronometro();
+
 
 		UIManager.put("OptionPane.cancelButtonText", messagesProperties.getProperty("geral.cancelar"));
 		UIManager.put("OptionPane.yesButtonText", messagesProperties.getProperty("geral.sim"));
@@ -130,7 +132,6 @@ public class AccentureTaskTimeManager {
 				criarAdicionarTarefaItemAoMenu(tarefasMenu, tarefa.getNomeTarefa());
 			}
 			//			criarAdicionarTarefaItemAoMenu(tarefasMenu, (String) dados.get("Tarefa"));
-			tarefasMenu.setEnabled(true);
 		}
 		else{
 			tarefasMenu.setEnabled(false);
@@ -268,6 +269,7 @@ public class AccentureTaskTimeManager {
 					selecionaLingua("Português-BR");
 					dados.put("Lingua", "Português-BR");
 					arquivo.gravarObjetoNoArquivo(dados);
+					destivarJanelas();
 					reiniciaAplicacao();
 				} else if (resposta == JOptionPane.CLOSED_OPTION) {
 					//Clicou em fechar.
@@ -287,6 +289,7 @@ public class AccentureTaskTimeManager {
 					selecionaLingua("English");
 					dados.put("Lingua", "English");
 					arquivo.gravarObjetoNoArquivo(dados);
+					destivarJanelas();
 					reiniciaAplicacao();
 				} else if (resposta == JOptionPane.CLOSED_OPTION) {
 					//Clicou em fechar.
@@ -308,12 +311,19 @@ public class AccentureTaskTimeManager {
 				dados.put("Tarefas", tarefasAdicionadas);
 				arquivo.gravarObjetoNoArquivo(dados);
 				criarAdicionarTarefaItemAoMenu(tarefasMenu, caixaNomeTarefaText);
+				tarefasMenu.setEnabled(true);
+
+
+				Cronometro janelaCronometro = new Cronometro();
+				janelaCronometro.setVisible(false);
+				janelaCronometro.setLocationRelativeTo(null);
+				listaJanelasCronometro.add(janelaCronometro);
+				janelaCronometro.setTitle(caixaNomeTarefaText);
 			}
 		});
 	}
 
 	private static void iniciarJanelasCronometro() {
-		listaJanelasCronometro = new LinkedList<Cronometro>();
 		for(int i = 0; i < tarefasAdicionadas.size(); i++){
 			Cronometro janelaCronometro = new Cronometro();
 			janelaCronometro.setVisible(false);
@@ -436,6 +446,23 @@ public class AccentureTaskTimeManager {
 			trayIcon.displayMessage(messagesProperties.getProperty("nome.aplicacao"),
 					messagesProperties.getProperty("cronometro.lancar.horas"), TrayIcon.MessageType.INFO);
 			timer.cancel();
+		}
+	}
+
+
+	public static boolean existeJanelaAtivada(){
+		for(Cronometro janela: listaJanelasCronometro){
+			if(janela.isAtivada()){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static void destivarJanelas(){
+		for(Cronometro janela: listaJanelasCronometro){
+			janela.setVisible(false);
+			janela = null;
 		}
 	}
 }
