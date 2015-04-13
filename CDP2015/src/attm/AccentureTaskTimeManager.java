@@ -45,7 +45,7 @@ public class AccentureTaskTimeManager {
 	
 	private static Menu tarefasMenu;
 	
-	private static Cronometro cronometro;
+	private static LinkedList<Cronometro> listaJanelasCronometro;
 	private static JanelaConfigurarAlarme janelaAlarme;
 	
 	private static LinkedList<Tarefa> tarefasAdicionadas;
@@ -94,8 +94,6 @@ public class AccentureTaskTimeManager {
 
 	@SuppressWarnings("unchecked")
 	private static void criarExibirGUI() {
-		cronometro = new Cronometro();
-		cronometro.setVisible(false);
 		janelaAlarme = new JanelaConfigurarAlarme();
 		janelaAlarme.setVisible(false);
 		
@@ -103,6 +101,8 @@ public class AccentureTaskTimeManager {
 		if(tarefasAdicionadas == null){
 			tarefasAdicionadas = new LinkedList<Tarefa>();
 		}
+		
+		iniciarJanelasCronometro();
 		
 		UIManager.put("OptionPane.cancelButtonText", messagesProperties.getProperty("geral.cancelar"));
 		
@@ -298,6 +298,24 @@ public class AccentureTaskTimeManager {
 		});
 	}
 
+	private static void iniciarJanelasCronometro() {
+		listaJanelasCronometro = new LinkedList<Cronometro>();
+		for(int i = 0; i < tarefasAdicionadas.size(); i++){
+			Cronometro janelaCronometro = new Cronometro();
+			janelaCronometro.setVisible(false);
+			janelaCronometro.setLocationRelativeTo(null);
+			listaJanelasCronometro.add(janelaCronometro);
+		}
+		
+		int indiceJanelaCronometro = 0;
+		
+		//Atribui a cada janela o título da tarefa
+		for(Cronometro janelaCronometro: listaJanelasCronometro){
+			janelaCronometro.setTitle(tarefasAdicionadas.get(indiceJanelaCronometro).getNomeTarefa());
+			indiceJanelaCronometro++;
+		}
+	}
+
 	//Obtain the image URL
 	protected static Image createImage(String path, String description) {
 		URL imageURL = AccentureTaskTimeManager.class.getResource(path);
@@ -335,13 +353,27 @@ public class AccentureTaskTimeManager {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				cronometro.setTitle(nomeLabelItem);
-				cronometro.setLocationRelativeTo(null);
-				cronometro.setVisible(true);
+				listaJanelasCronometro.get(buscarIndiceTarefaClicada(nomeLabelItem));
+			}
+			
+			private int buscarIndiceTarefaClicada(String nomeLabelItem){
+				int indiceTarefaClicada = 0;
+				
+				for(Tarefa tarefaClicada: tarefasAdicionadas){
+					if(!tarefaClicada.getNomeTarefa().equals(nomeLabelItem)){
+						indiceTarefaClicada++;
+					}
+					else{
+						break;
+					}
+				}
+				
+				return indiceTarefaClicada;
 			}
 		});
 		return item;
 	}
+	
 
 	private static void reiniciaAplicacao(){
 		exibeMensagemAbertura = false;
