@@ -125,6 +125,30 @@ public class AccentureTaskTimeManager {
 		//        CheckboxMenuItem cb1 = new CheckboxMenuItem("Set auto size");
 		//        CheckboxMenuItem cb2 = new CheckboxMenuItem("Set tooltip");
 		MenuItem tarefasItem = criarAdicionarItemAoMenu(popup, messagesProperties.getProperty("menu.item.inserir.tarefas"));
+		MenuItem removerTarefaItem = criarAdicionarItemAoMenu(popup, messagesProperties.getProperty("menu.item.remover.tarefa"));
+		
+		removerTarefaItem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(tarefasAdicionadas != null && tarefasAdicionadas.size() > 0){
+					String[] tarefasAdicionadasArray = new String[tarefasAdicionadas.size()];
+					for(int i = 0; i < tarefasAdicionadasArray.length; i++){
+						tarefasAdicionadasArray[i] = tarefasAdicionadas.get(i).getNomeTarefa();
+					}
+					
+					String tarefaSelecionada = (String) JOptionPane.showInputDialog(null, messagesProperties.getProperty("menu.item.remover.tarefa.mensagem"), messagesProperties.getProperty("menu.item.remover.tarefa.titulo"),
+							JOptionPane.PLAIN_MESSAGE, null, tarefasAdicionadasArray, tarefasAdicionadasArray[0]);
+					
+					System.out.println(tarefaSelecionada);
+				}
+				else{
+					JOptionPane.showConfirmDialog(null, messagesProperties.getProperty("menu.item.remover.tarefa.vazio"));
+				}
+				
+			}
+		});
+		
 		tarefasMenu = criarAdicionarMenuAoMenu(popup, messagesProperties.getProperty("menu.item.tarefas"));
 
 		if(existemTarefasAdicionadas()){
