@@ -63,7 +63,7 @@ public class AccentureTaskTimeManager {
 		} catch (ClassNotFoundException ex) {
 			ex.printStackTrace();
 		}
-
+		
 		configurarArquivo();
 
 		configurarTimer();
@@ -96,7 +96,7 @@ public class AccentureTaskTimeManager {
 	private static void criarExibirGUI() {
 		janelaAlarme = new JanelaConfigurarAlarme();
 		janelaAlarme.setVisible(false);
-
+		
 		tarefasAdicionadas = (LinkedList<Tarefa>) dados.get("Tarefas");
 		if(tarefasAdicionadas == null){
 			tarefasAdicionadas = new LinkedList<Tarefa>();
@@ -132,15 +132,7 @@ public class AccentureTaskTimeManager {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(tarefasAdicionadas != null && tarefasAdicionadas.size() > 0){
-					String[] tarefasAdicionadasArray = new String[tarefasAdicionadas.size()];
-					for(int i = 0; i < tarefasAdicionadasArray.length; i++){
-						tarefasAdicionadasArray[i] = tarefasAdicionadas.get(i).getNomeTarefa();
-					}
-					
-					String tarefaSelecionada = (String) JOptionPane.showInputDialog(null, messagesProperties.getProperty("menu.item.remover.tarefa.mensagem"), messagesProperties.getProperty("menu.item.remover.tarefa.titulo"),
-							JOptionPane.PLAIN_MESSAGE, null, tarefasAdicionadasArray, tarefasAdicionadasArray[0]);
-					
-					System.out.println(tarefaSelecionada);
+					AccentureTaskTimeManager.removerTarefas();
 				}
 				else{
 					JOptionPane.showConfirmDialog(null, messagesProperties.getProperty("menu.item.remover.tarefa.vazio"));
@@ -488,5 +480,30 @@ public class AccentureTaskTimeManager {
 			janela.setVisible(false);
 			janela = null;
 		}
+	}
+	
+	public static void removerTarefas(){
+		String[] tarefasAdicionadasArray = new String[tarefasAdicionadas.size()];
+		for(int i = 0; i < tarefasAdicionadasArray.length; i++){
+			tarefasAdicionadasArray[i] = tarefasAdicionadas.get(i).getNomeTarefa();
+		}
+		
+		String tarefaSelecionada = (String) JOptionPane.showInputDialog(null, messagesProperties.getProperty("menu.item.remover.tarefa.mensagem"), messagesProperties.getProperty("menu.item.remover.tarefa.titulo"),
+				JOptionPane.PLAIN_MESSAGE, null, tarefasAdicionadasArray, tarefasAdicionadasArray[0]);
+		
+		for(int i = 0; i < tarefasAdicionadas.size(); i++){
+			if(tarefasAdicionadas.get(i).getNomeTarefa().equals(tarefaSelecionada)){
+				tarefasAdicionadas.remove(i);
+			}
+		}
+		
+		for(int i = 0; i < tarefasMenu.getItemCount(); i++){
+			if(tarefasMenu.getItem(i).getName().equals(tarefaSelecionada)){
+				tarefasMenu.remove(i);
+			}
+		}
+		dados.remove("Tarefas");
+		dados.put("Tarefas", tarefasAdicionadas);
+		arquivo.gravarObjetoNoArquivo(dados);
 	}
 }
