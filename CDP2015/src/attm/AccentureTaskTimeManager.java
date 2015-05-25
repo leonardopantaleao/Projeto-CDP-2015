@@ -50,6 +50,8 @@ public class AccentureTaskTimeManager {
 
 	private static LinkedList<Tarefa> tarefasAdicionadas;
 	
+	private static boolean fromRemove = false;
+	
 	public static void main(String[] args) {
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
@@ -102,8 +104,10 @@ public class AccentureTaskTimeManager {
 			tarefasAdicionadas = new LinkedList<Tarefa>();
 		}
 
-		listaJanelasCronometro = new LinkedList<Cronometro>();
-		iniciarJanelasCronometro();
+		if(!fromRemove){
+			listaJanelasCronometro = new LinkedList<Cronometro>();
+			iniciarJanelasCronometro();
+		}
 
 
 		UIManager.put("OptionPane.cancelButtonText", messagesProperties.getProperty("geral.cancelar"));
@@ -135,7 +139,7 @@ public class AccentureTaskTimeManager {
 					AccentureTaskTimeManager.removerTarefas();
 				}
 				else{
-					JOptionPane.showConfirmDialog(null, messagesProperties.getProperty("menu.item.remover.tarefa.vazio"));
+					JOptionPane.showMessageDialog(null, messagesProperties.getProperty("menu.item.remover.tarefa.vazio"));
 				}
 				
 			}
@@ -286,7 +290,7 @@ public class AccentureTaskTimeManager {
 					dados.put("Lingua", "Português-BR");
 					arquivo.gravarObjetoNoArquivo(dados);
 					destivarJanelas();
-					reiniciaAplicacao();
+					reiniciarAplicacao();
 				} else if (resposta == JOptionPane.CLOSED_OPTION) {
 					//Clicou em fechar.
 				}
@@ -306,7 +310,7 @@ public class AccentureTaskTimeManager {
 					dados.put("Lingua", "English");
 					arquivo.gravarObjetoNoArquivo(dados);
 					destivarJanelas();
-					reiniciaAplicacao();
+					reiniciarAplicacao();
 				} else if (resposta == JOptionPane.CLOSED_OPTION) {
 					//Clicou em fechar.
 				}
@@ -415,7 +419,7 @@ public class AccentureTaskTimeManager {
 	}
 
 
-	private static void reiniciaAplicacao(){
+	private static void reiniciarAplicacao(){
 		exibeMensagemAbertura = false;
 		popup.removeAll();
 		tray.remove(trayIcon);
@@ -431,11 +435,18 @@ public class AccentureTaskTimeManager {
 	}
 
 	public static boolean existemTarefasAdicionadas(){
-		if(dados.containsKey("Tarefas")){
-			return true;
+//		if(dados.containsKey("Tarefas")){
+//			return true;
+//		}
+//		else{
+//			return false;
+//		}
+		
+		if(tarefasAdicionadas.size() == 0){
+			return false;
 		}
 		else{
-			return false;
+			return true;
 		}
 	}
 
@@ -505,5 +516,8 @@ public class AccentureTaskTimeManager {
 		dados.remove("Tarefas");
 		dados.put("Tarefas", tarefasAdicionadas);
 		arquivo.gravarObjetoNoArquivo(dados);
+		
+		fromRemove = true;
+		reiniciarAplicacao();
 	}
 }
