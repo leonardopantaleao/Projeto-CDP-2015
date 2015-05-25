@@ -28,7 +28,7 @@ public class Cronometro extends javax.swing.JFrame {
 	private int currentHora = 0;
 	private int velocidade = 1000;
 	private Properties messagesProperties;
-	
+	private boolean removida = false;
 	private boolean ativada = false;
 
 	public Cronometro() {
@@ -258,6 +258,37 @@ public class Cronometro extends javax.swing.JFrame {
 
 	public void setAtivada(boolean ativada) {
 		this.ativada = ativada;
+	}
+	
+	public int getCurrentSegundo() {
+		return currentSegundo;
+	}
+
+	public void setCurrentSegundo(int currentSegundo) {
+		this.currentSegundo = currentSegundo;
+	}
+
+	public int getCurrentMinuto() {
+		return currentMinuto;
+	}
+
+	public void setCurrentMinuto(int currentMinuto) {
+		this.currentMinuto = currentMinuto;
+	}
+
+	public int getCurrentHora() {
+		return currentHora;
+	}
+
+	public void setCurrentHora(int currentHora) {
+		this.currentHora = currentHora;
+	}
+	public boolean isRemovida() {
+		return removida;
+	}
+
+	public void setRemovida(boolean removida) {
+		this.removida = removida;
 	}
 	
 }

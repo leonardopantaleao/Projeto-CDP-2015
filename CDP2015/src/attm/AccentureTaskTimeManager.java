@@ -161,6 +161,16 @@ public class AccentureTaskTimeManager {
 		//		MenuItem warningItem = new MenuItem("Warning");
 		//		MenuItem infoItem = new MenuItem("Info");
 		//		MenuItem noneItem = new MenuItem("None");
+		
+		MenuItem relatorio = new MenuItem(messagesProperties.getProperty("menu.item.relatorio"));
+		relatorio.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				exibirRelatorioHoras();
+			}
+		});
+		popup.add(relatorio);
+		
 
 		//Add components to popup menu
 		popup.addSeparator();
@@ -505,6 +515,7 @@ public class AccentureTaskTimeManager {
 		for(int i = 0; i < tarefasAdicionadas.size(); i++){
 			if(tarefasAdicionadas.get(i).getNomeTarefa().equals(tarefaSelecionada)){
 				tarefasAdicionadas.remove(i);
+				listaJanelasCronometro.get(i).setRemovida(true);
 			}
 		}
 		
@@ -519,5 +530,20 @@ public class AccentureTaskTimeManager {
 		
 		fromRemove = true;
 		reiniciarAplicacao();
+	}
+	
+	public static void exibirRelatorioHoras(){
+		if(existemTarefasAdicionadas()){
+			String relatorioFinal = messagesProperties.getProperty("janela.relatorio.relatorio");
+			for(Cronometro janela: listaJanelasCronometro){
+				if(!janela.isRemovida()){
+					relatorioFinal += janela.getTitle() + ": " + janela.getCurrentHora() + "h " + janela.getCurrentMinuto() + "m\n";
+				}
+			}
+			JOptionPane.showMessageDialog(null, relatorioFinal);
+		}
+		else{
+			JOptionPane.showMessageDialog(null, messagesProperties.get("janela.relatorio.sem.tarefa"));
+		}
 	}
 }
